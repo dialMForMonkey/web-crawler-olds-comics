@@ -18,21 +18,27 @@ class MyApp extends StatelessWidget {
         ),
         body: Column(
           children: [
-            TextFormField(
-              decoration: const InputDecoration(hintText: 'url'),
-            ),
-            TextFormField(
-              decoration: const InputDecoration(hintText: 'nome das imagens '),
-            ),
-            TextButton(
-              child: const Text("runner"),
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.all(16.0),
-                primary: Colors.blueAccent,
-                textStyle: const TextStyle(fontSize: 30),
-              ),
-              onPressed: null,
-            ),
+            Form(
+                child: Column(
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(hintText: 'url'),
+                ),
+                TextFormField(
+                  decoration:
+                      const InputDecoration(hintText: 'nome das imagens '),
+                ),
+                TextButton(
+                  child: const Text("runner"),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.all(16.0),
+                    primary: Colors.blueAccent,
+                    textStyle: const TextStyle(fontSize: 30),
+                  ),
+                  onPressed: () {},
+                ),
+              ],
+            ))
           ],
         ),
       ),
