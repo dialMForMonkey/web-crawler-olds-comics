@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,8 +26,7 @@ class MyApp extends StatelessWidget {
                   decoration: const InputDecoration(hintText: 'url'),
                 ),
                 TextFormField(
-                  decoration:
-                      const InputDecoration(hintText: 'nome das imagens '),
+                  decoration: const InputDecoration(hintText: 'name imagens'),
                 ),
                 TextButton(
                   child: const Text("runner"),
@@ -38,7 +38,46 @@ class MyApp extends StatelessWidget {
                   onPressed: () {},
                 ),
               ],
-            ))
+            )),
+            Container(
+                height: 250,
+                padding: const EdgeInsets.all(5),
+                child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: 'https://picsum.photos/250?image=9',
+                      ),
+                      FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: 'https://picsum.photos/250?image=9',
+                      ),
+                      FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: 'https://picsum.photos/250?image=9',
+                      ),
+                      FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: 'https://picsum.photos/250?image=9',
+                      ),
+                      FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: 'https://picsum.photos/250?image=9',
+                      ),
+                      FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: 'https://picsum.photos/250?image=9',
+                      ),
+                      FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: 'https://picsum.photos/250?image=9',
+                      ),
+                      FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: 'https://picsum.photos/250?image=9',
+                      ),
+                    ]))
           ],
         ),
       ),
