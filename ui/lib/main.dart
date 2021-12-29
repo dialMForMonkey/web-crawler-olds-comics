@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -11,6 +13,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    debugPrint(">>>>>>>>>>>>> teste wid >>>>>>>>>>>>>");
+    log(">>>>>>>>>>>>> teste wid >>>>>>>>>>>>>");
+    List<Widget> listImages = [
+      FadeInImage.memoryNetwork(
+        placeholder: kTransparentImage,
+        image: 'https://picsum.photos/250?image=9',
+      ),
+      FadeInImage.memoryNetwork(
+        placeholder: kTransparentImage,
+        image: 'https://picsum.photos/250?image=9',
+      )
+    ];
     return MaterialApp(
       title: 'Flutter Demo',
       home: Scaffold(
@@ -42,42 +56,16 @@ class MyApp extends StatelessWidget {
             Container(
                 height: 250,
                 padding: const EdgeInsets.all(5),
-                child: ListView(
+                child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      FadeInImage.memoryNetwork(
+                    itemCount: listImages.length,
+                    itemBuilder: (BuildContext ctx, int index) {
+                      debugPrint(">>>>>>>>>>>>> teste >>>>>>>>>>>>>${index}");
+                      return FadeInImage.memoryNetwork(
                         placeholder: kTransparentImage,
                         image: 'https://picsum.photos/250?image=9',
-                      ),
-                      FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: 'https://picsum.photos/250?image=9',
-                      ),
-                      FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: 'https://picsum.photos/250?image=9',
-                      ),
-                      FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: 'https://picsum.photos/250?image=9',
-                      ),
-                      FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: 'https://picsum.photos/250?image=9',
-                      ),
-                      FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: 'https://picsum.photos/250?image=9',
-                      ),
-                      FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: 'https://picsum.photos/250?image=9',
-                      ),
-                      FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: 'https://picsum.photos/250?image=9',
-                      ),
-                    ]))
+                      );
+                    }))
           ],
         ),
       ),
