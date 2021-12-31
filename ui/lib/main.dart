@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 
 class HomeState extends State<MyApp> {
   // This widget is the root of your application.
-  List<Widget> listImages = [];
+  List<ImageHandler> listImages = [];
 
   @override
   Widget build(BuildContext context) {
@@ -43,34 +43,10 @@ class HomeState extends State<MyApp> {
                   textStyle: const TextStyle(fontSize: 30),
                 ),
                 onPressed: () {
-                  debugPrint(">>>>>>>>>>>>> press teste >>>>>>>>>>>>>");
+                  ImageHandler image = ImageHandler(
+                      'https://picsum.photos/250?image=${listImages.length}');
 
-                  listImages.add(GestureDetector(
-                    child: FadeInImage.memoryNetwork(
-                      placeholder: kTransparentImage,
-                      image: 'https://picsum.photos/250?image=9',
-                    ),
-                    onTap: () => showMaterialModalBottomSheet(
-                      expand: false,
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => Material(
-                          child: SafeArea(
-                        top: false,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              title: Text('Save'),
-                              leading: Icon(Icons.save_alt),
-                              onTap: () => Navigator.of(context).pop(),
-                            ),
-                          ],
-                        ),
-                      )),
-                    ),
-                  ));
-                  debugPrint(" >>>>>>> lista tamanho ${listImages.length}");
+                  listImages.add(image);
                   setState(() {});
                 },
               ),
@@ -83,13 +59,62 @@ class HomeState extends State<MyApp> {
                 scrollDirection: Axis.horizontal,
                 itemCount: listImages.length,
                 itemBuilder: (BuildContext ctx, int index) {
-                  debugPrint(">>>>>>>>>>>>> teste >>>>>>>>>>>>>${index}");
-
-                  return listImages[index];
+                  return listImages[index]
+                      .widgetImage(ctx, setState, listImages);
                 },
               ))
         ],
       ),
     );
   }
+}
+
+class ImageHandler {
+  String url;
+  ImageHandler(this.url);
+  String getUrl() => url;
+
+  GestureDetector widgetImage(
+          BuildContext ctx,
+          void Function(void Function()) forceSetState,
+          List<ImageHandler> list) =>
+      GestureDetector(
+        child: FadeInImage.memoryNetwork(
+          placeholder: kTransparentImage,
+          image: url,
+        ),
+        onTap: () {
+          showMaterialModalBottomSheet(
+            expand: false,
+            context: ctx,
+            backgroundColor: Colors.transparent,
+            builder: (context) => Material(
+                child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    title: Text('Save'),
+                    leading: Icon(Icons.save_alt),
+                    onTap: () {
+                      list.removeWhere((image) {
+                        debugPrint(">>>>>>>>>>>>> $url >>>>>>>>>>>>>");
+                        debugPrint(
+                            ">>>>>>>>>>>>> ${image.getUrl()} >>>>>>>>>>>>>");
+                        debugPrint(
+                            ">>>>>>>>>>>>> condicao ${image.getUrl() != url} >>>>>>>>>>>>>");
+
+                        return image.getUrl() == url;
+                      });
+                      forceSetState(() {});
+                      return Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            )),
+          );
+        },
+      );
 }
