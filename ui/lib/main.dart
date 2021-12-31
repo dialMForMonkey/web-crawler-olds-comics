@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
 void main() {
   runApp(MaterialApp(title: 'webcrawller', home: MyApp()));
 }
@@ -42,9 +44,31 @@ class HomeState extends State<MyApp> {
                 ),
                 onPressed: () {
                   debugPrint(">>>>>>>>>>>>> press teste >>>>>>>>>>>>>");
-                  listImages.add(FadeInImage.memoryNetwork(
-                    placeholder: kTransparentImage,
-                    image: 'https://picsum.photos/250?image=9',
+
+                  listImages.add(GestureDetector(
+                    child: FadeInImage.memoryNetwork(
+                      placeholder: kTransparentImage,
+                      image: 'https://picsum.photos/250?image=9',
+                    ),
+                    onTap: () => showMaterialModalBottomSheet(
+                      expand: false,
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => Material(
+                          child: SafeArea(
+                        top: false,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              title: Text('Save'),
+                              leading: Icon(Icons.save_alt),
+                              onTap: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        ),
+                      )),
+                    ),
                   ));
                   debugPrint(" >>>>>>> lista tamanho ${listImages.length}");
                   setState(() {});
@@ -56,13 +80,14 @@ class HomeState extends State<MyApp> {
               height: 250,
               padding: const EdgeInsets.all(5),
               child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: listImages.length,
-                  itemBuilder: (BuildContext ctx, int index) {
-                    debugPrint(">>>>>>>>>>>>> teste >>>>>>>>>>>>>${index}");
+                scrollDirection: Axis.horizontal,
+                itemCount: listImages.length,
+                itemBuilder: (BuildContext ctx, int index) {
+                  debugPrint(">>>>>>>>>>>>> teste >>>>>>>>>>>>>${index}");
 
-                    return listImages[index];
-                  }))
+                  return listImages[index];
+                },
+              ))
         ],
       ),
     );
