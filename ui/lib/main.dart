@@ -3,7 +3,17 @@ import 'package:transparent_image/transparent_image.dart';
 
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
+import 'dart:ffi' as ffi;
+import 'dart:io' show Directory;
+
+import 'package:path/path.dart' as path;
+
+typedef CrallerFunc = ffi.Void Function();
+typedef Craller = void Function();
+String libraryPath = "";
+
 void main() {
+  libraryPath = path.join(Directory.current.path, '../crawler', 'lib.a');
   runApp(MaterialApp(title: 'webcrawller', home: MyApp()));
 }
 
@@ -34,6 +44,24 @@ class HomeState extends State<MyApp> {
               ),
               TextFormField(
                 decoration: const InputDecoration(hintText: 'name imagens'),
+              ),
+              TextButton(
+                child: const Text("call go"),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(16.0),
+                  primary: Colors.blueAccent,
+                  textStyle: const TextStyle(fontSize: 30),
+                ),
+                onPressed: () {
+                  final dylib = ffi.DynamicLibrary.open(libraryPath);
+
+                  // Look up the C function 'hello_world'
+                  final Craller tprint = dylib
+                      .lookup<ffi.NativeFunction<CrallerFunc>>('Print')
+                      .asFunction();
+
+                  tprint();
+                },
               ),
               TextButton(
                 child: const Text("runner"),
