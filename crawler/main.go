@@ -1,12 +1,26 @@
+//go build -buildmode=c-shared -o lib.a main.go
 package main
 
 import "C"
 
 func main() {
-	println("call crawler")
+
 }
 
-//export Print
-func Print() {
-	println("call crawler")
+var urls string
+var status string
+
+//export Start
+func Start() {
+
+}
+
+//export GetStatus
+func GetStatus() string {
+	return ""
+}
+
+//export UrlsSearched
+func UrlsSearched() string {
+	return ""
 }
