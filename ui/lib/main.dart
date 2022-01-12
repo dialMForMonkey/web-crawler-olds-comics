@@ -3,14 +3,29 @@ import 'package:transparent_image/transparent_image.dart';
 
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-import 'dart:ffi' as ffi;
-import 'dart:io' show Directory;
-
+import 'dart:ffi';
+import 'dart:async';
+import 'package:ffi/ffi.dart';
+import 'dart:io' show Directory, Platform;
 import 'package:path/path.dart' as path;
 
-typedef CrallerFunc = ffi.Void Function();
-typedef Craller = void Function();
+typedef StartFunc = Void Function();
+typedef Start = void Function();
+
+typedef GetStatusFunc = Pointer<Utf8> Function();
+typedef UrlsSearchedFunc = Pointer<Utf8> Function();
+
+// Look up the C function 'hello_world'
+final Start start =
+    dylib.lookup<NativeFunction<StartFunc>>('Start').asFunction();
+final getStatus =
+    dylib.lookupFunction<GetStatusFunc, GetStatusFunc>('GetStatus');
+final urlsSearched =
+    dylib.lookupFunction<UrlsSearchedFunc, UrlsSearchedFunc>('UrlsSearched');
+
 String libraryPath = "";
+
+final dylib = DynamicLibrary.open(libraryPath);
 
 void main() {
   libraryPath = path.join(Directory.current.path, '../crawler', 'lib.a');
@@ -46,24 +61,6 @@ class HomeState extends State<MyApp> {
                 decoration: const InputDecoration(hintText: 'name imagens'),
               ),
               TextButton(
-                child: const Text("call go"),
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.all(16.0),
-                  primary: Colors.blueAccent,
-                  textStyle: const TextStyle(fontSize: 30),
-                ),
-                onPressed: () {
-                  final dylib = ffi.DynamicLibrary.open(libraryPath);
-
-                  // Look up the C function 'hello_world'
-                  final Craller tprint = dylib
-                      .lookup<ffi.NativeFunction<CrallerFunc>>('Print')
-                      .asFunction();
-
-                  tprint();
-                },
-              ),
-              TextButton(
                 child: const Text("runner"),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.all(16.0),
@@ -71,11 +68,23 @@ class HomeState extends State<MyApp> {
                   textStyle: const TextStyle(fontSize: 30),
                 ),
                 onPressed: () {
-                  ImageHandler image = ImageHandler(
-                      'https://picsum.photos/250?image=${listImages.length}');
+                  start();
+                  var timer = Timer(const Duration(milliseconds: 100), () {
+                    if (getStatus().toDartString() == "running") {
+                      var imageu = urlsSearched().toDartString();
+                      if (imageu != "") {
+                        ImageHandler image = ImageHandler(imageu);
+                        listImages.add(image);
+                        setState(() {});
+                      }
+                    }
+                    debugPrint(">>>>>>>>>>>>> timer >>>>>>>>>>>>>");
+                  });
 
-                  listImages.add(image);
-                  setState(() {});
+                  if (getStatus().toDartString() == 'finish') {
+                    timer.cancel();
+                    debugPrint(">>>>>>>>>>>>> finish timer >>>>>>>>>>>>>");
+                  }
                 },
               ),
             ],
