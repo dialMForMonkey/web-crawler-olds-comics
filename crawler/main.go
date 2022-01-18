@@ -17,11 +17,13 @@ var status string
 
 //export Start
 func Start() {
+	go fakeCreateArrayUrl()
 	status = "wait"
 }
 
 func fakeCreateArrayUrl() {
 	status = "running"
+
 	for i := 0; i < 20; i++ {
 		time.Sleep(time.Millisecond * 1000)
 		urls = append(urls, fmt.Sprintf("https://picsum.photos/250?image=%d", i))
@@ -31,7 +33,6 @@ func fakeCreateArrayUrl() {
 
 //export GetStatus
 func GetStatus() *C.char {
-	go fakeCreateArrayUrl()
 	return C.CString(status)
 }
 

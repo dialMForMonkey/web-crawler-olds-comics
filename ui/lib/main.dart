@@ -6,7 +6,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'dart:ffi';
 import 'dart:async';
 import 'package:ffi/ffi.dart';
-import 'dart:io' show Directory, Platform;
+import 'dart:io' show Directory;
 import 'package:path/path.dart' as path;
 
 typedef StartFunc = Void Function();
@@ -69,22 +69,22 @@ class HomeState extends State<MyApp> {
                 ),
                 onPressed: () {
                   start();
-                  var timer = Timer(const Duration(milliseconds: 100), () {
+                  Timer.periodic(const Duration(milliseconds: 100), (timer) {
+                    var image = urlsSearched().toDartString();
                     if (getStatus().toDartString() == "running") {
-                      var imageu = urlsSearched().toDartString();
-                      if (imageu != "") {
-                        ImageHandler image = ImageHandler(imageu);
-                        listImages.add(image);
+                      debugPrint(">>>>>>>>>>>>> imagem $image >>>>>>>>>>>>>");
+                      if (image != "") {
+                        ImageHandler imageHandler = ImageHandler(image);
+                        listImages.add(imageHandler);
                         setState(() {});
                       }
                     }
-                    debugPrint(">>>>>>>>>>>>> timer >>>>>>>>>>>>>");
-                  });
 
-                  if (getStatus().toDartString() == 'finish') {
-                    timer.cancel();
-                    debugPrint(">>>>>>>>>>>>> finish timer >>>>>>>>>>>>>");
-                  }
+                    if (getStatus().toDartString() == 'finish' && image == "") {
+                      timer.cancel();
+                      debugPrint(">>>>>>>>>>>>> finish timer >>>>>>>>>>>>>");
+                    }
+                  });
                 },
               ),
             ],
