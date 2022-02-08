@@ -6,6 +6,7 @@ import "C"
 import (
 	"fmt"
 	"net/http"
+	"regexp"
 	"unsafe"
 )
 
@@ -50,11 +51,44 @@ calcular o proximo valor
 
 
 **/
+
+type pattern struct {
+	value    string
+	mask     string
+	typeMask string
+}
+
+func readPatterns(url string) []pattern {
+	re := regexp.MustCompile(`({.+?})`)
+
+	patterns := make([]pattern, 0)
+	for _, group := range re.FindAllString(url, -1) {
+		reGroups := regexp.MustCompile(`{(?P<type>.+?):(?P<mask>.+?):(?P<value>.+?)}`)
+
+		valueGroups := reGroups.FindStringSubmatch(group)
+		namedGroups := reGroups.SubexpNames()
+		p := pattern{}
+
+		for i, namedGroup := range namedGroups {
+			if namedGroup == "mask" {
+				p.mask = valueGroups[i]
+			} else if namedGroup == "value" {
+				p.value = valueGroups[i]
+			} else if namedGroup == "type" {
+				p.typeMask = valueGroups[i]
+			}
+		}
+
+		patterns = append(patterns, p)
+	}
+	return patterns
+}
+
 func convertFormatsToValue(string) string {
 	return ""
 }
 
-func nextPage(currentPage string) {
+func nextPage(currentPage string) string {
 
 	//	return fmt.Sprint("https://www1.folha.uol.com.br/fsp/quadrin/f3{date:ddmmyyyy}{number:dd}.htm")
 	//	return fmt.Sprint("https://www1.folha.uol.com.br/fsp/quadrin/f30101200001.htm")
